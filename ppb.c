@@ -42,7 +42,7 @@ static void set_units(bool si)
 
 	M = K * K;
 	G = M * K;
-	T = G * K;
+	T = (uint64_t)G * K;
 }
 
 static void pretty_print_bytes(uint64_t bytes)
