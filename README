@@ -1,0 +1,15 @@
+ppb
+===
+
+This is a real simple tool for printing a value of bytes in a more human
+readable form e.g
+
+   $ ppb 83474269
+   79.61 MiB
+
+or using powers of 10 (SI)
+
+    $ ppb --si 83474269
+    83.47 MB
+
+This is licensed under the MIT License. See MIT-LICENSE.txt.
