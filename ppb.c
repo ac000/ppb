@@ -1,7 +1,7 @@
 /*
  * ppb.c - Pretty print bytes
  *
- * Copyright (C) 2015		Andrew Clayton <andrew@digital-domain.net>
+ * Copyright (C) 2015 - 2016	Andrew Clayton <andrew@digital-domain.net>
  *
  * This software is released under the MIT License.
  * See MIT-LICENSE.txt
@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+#include <inttypes.h>
 #include <stdbool.h>
 
 static uint16_t K;
@@ -50,7 +50,7 @@ static void pretty_print_bytes(uint64_t bytes)
 	const char *fmt = "%.2f %s\n";
 
 	if (bytes < K)
-		printf("%lu bytes\n", bytes);
+		printf("%" PRIu64 " bytes\n", bytes);
 	else if (bytes < M)
 		printf(fmt, (float)bytes / K, KS);
 	else if (bytes < G)
