@@ -12,4 +12,6 @@ or using powers of 10 (SI)
     $ ppb --si 83474269
     83.47 MB
 
+This requires libac from here https://github.com/ac000/libac
+
 This is licensed under the MIT License. See MIT-LICENSE.txt.

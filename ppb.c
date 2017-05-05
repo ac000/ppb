@@ -1,7 +1,7 @@
 /*
  * ppb.c - Pretty print bytes
  *
- * Copyright (C) 2015 - 2016	Andrew Clayton <andrew@digital-domain.net>
+ * Copyright (C) 2015 - 2017	Andrew Clayton <andrew@digital-domain.net>
  *
  * This software is released under the MIT License.
  * See MIT-LICENSE.txt
@@ -9,74 +9,28 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <inttypes.h>
-#include <stdbool.h>
 
-static uint16_t K;
-static uint32_t M;
-static uint32_t G;
-static uint64_t T;
-
-static const char *KS;
-static const char *MS;
-static const char *GS;
-static const char *TS;
-
-static void set_units(bool si)
-{
-	if (!si) {
-		K = 1024;
-
-		KS = "KiB";
-		MS = "MiB";
-		GS = "GiB";
-		TS = "TiB";
-	} else {
-		K = 1000;
-
-		KS = "KB";
-		MS = "MB";
-		GS = "GB";
-		TS = "TB";
-	}
-
-	M = K * K;
-	G = M * K;
-	T = (uint64_t)G * K;
-}
-
-static void pretty_print_bytes(uint64_t bytes)
-{
-	const char *fmt = "%.2f %s\n";
-
-	if (bytes < K)
-		printf("%" PRIu64 " bytes\n", bytes);
-	else if (bytes < M)
-		printf(fmt, (float)bytes / K, KS);
-	else if (bytes < G)
-		printf(fmt, (float)bytes / M, MS);
-	else if (bytes < T)
-		printf(fmt, (float)bytes / G, GS);
-	else
-		printf(fmt, (float)bytes / T, TS);
-}
+#include <libac.h>
 
 int main(int argc, char *argv[])
 {
-	uint64_t bytes;
+	ac_misc_ppb_t ppb;
+	int si_flags = AC_SI_UNITS_NO;
+	u64 bytes;
 
 	if (argc == 3) {
-		set_units(true);
-		bytes = strtoll(argv[2], NULL, 10);
-	} else if (argc == 2) {
-		set_units(false);
-		bytes = strtoll(argv[1], NULL, 10);
-	} else {
+		si_flags = AC_SI_UNITS_YES;
+	} else if (argc < 2) {
 		printf("Usage: ppb [--si] <bytes>\n");
 		exit(EXIT_FAILURE);
 	}
+	bytes = strtoll(argv[argc-1], NULL, 10);
 
-	pretty_print_bytes(bytes);
+	ac_misc_ppb(bytes, si_flags, &ppb);
+	if (ppb.factor == AC_MISC_PPB_BYTES)
+		printf("%hu bytes\n", ppb.value.v_u16);
+	else
+		printf("%.2f %s\n", ppb.value.v_float, ppb.prefix);
 
 	exit(EXIT_SUCCESS);
 }
